@@ -33,7 +33,6 @@
         android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:fontFamily="@font/mabry_pro_black"
-        android:gravity="top"
         android:maxLines="3"
         android:textColor="@color/headlinesText"
         android:textSize="17sp"

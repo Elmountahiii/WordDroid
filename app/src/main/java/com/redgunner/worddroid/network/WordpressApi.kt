@@ -1,6 +1,7 @@
-package com.redgunner.worddroid.network
+    package com.redgunner.worddroid.network
 
 import com.redgunner.worddroid.models.category.Categories
+import com.redgunner.worddroid.models.comments.Comments
 import com.redgunner.worddroid.models.post.Post
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -33,5 +34,11 @@ interface WordpressApi {
     suspend fun getPostById(
         @Path("postId") postId:Int
     ): Post
+
+
+    @GET("/wp-json/wp/v2/comments")
+    suspend fun getPostComments(
+        @Query("post") postId: Int
+    ):List<Comments>
 
 }

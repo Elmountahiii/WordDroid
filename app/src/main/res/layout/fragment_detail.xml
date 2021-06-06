@@ -33,7 +33,6 @@
         android:layout_height="0dp"
         android:fillViewport="true"
         android:visibility="invisible"
-        tools:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -46,8 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:elevation="0dp"
-
-
+            style="@style/Widget.MaterialComponents.AppBarLayout.Surface"
             >
 
             <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -56,7 +54,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="10dp"
-
                 app:collapsedTitleGravity="center"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
@@ -137,13 +134,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
+
+
                 <WebView
                     android:id="@+id/postWebView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    />
+
+                <Button
+                    android:id="@+id/buttonShowComments"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:text="Show All Comment"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/postWebView" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -156,10 +169,8 @@
         android:id="@+id/detailShimmerLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:shimmer_auto_start="true"
-        tools:visibility="visible"
-
         app:layout_constraintBottom_toBottomOf="@id/coordinatorLayout"
         app:layout_constraintEnd_toEndOf="@+id/coordinatorLayout"
         app:layout_constraintStart_toStartOf="@+id/coordinatorLayout"

@@ -109,10 +109,16 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
     }
 
+    override fun onStart() {
+        super.onStart()
+
+          tabLayout.setScrollPosition(viewModel.tabLayoutPosition,0f,false)
+    }
+
 
     override fun onResume() {
         super.onResume()
-
+        tabLayout.getTabAt(viewModel.tabLayoutPosition)?.select()
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
 
@@ -122,6 +128,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 HomePostList.scrollToPosition(0)
 
                 viewModel.getPostByCategory(tab!!.position)
+                viewModel.saveTabLayoutPosition(tab.position)
             }
 
             override fun onTabUnselected(tab: TabLayout.Tab?) {

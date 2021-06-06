@@ -18,8 +18,20 @@
             android:name="PostId"
             app:argType="integer"
             android:defaultValue="0" />
+        <action
+            android:id="@+id/action_detailFragment_to_commentsFragment"
+            app:destination="@id/commentsFragment" />
     </fragment>
     <action
         android:id="@+id/action_global_detailFragment"
         app:destination="@id/detailFragment" />
+    <fragment
+        android:id="@+id/commentsFragment"
+        android:name="com.redgunner.worddroid.view.fragment.CommentsFragment"
+        android:label="fragment_comments"
+        tools:layout="@layout/fragment_comments" >
+        <argument
+            android:name="postId"
+            app:argType="integer" />
+    </fragment>
 </navigation>
