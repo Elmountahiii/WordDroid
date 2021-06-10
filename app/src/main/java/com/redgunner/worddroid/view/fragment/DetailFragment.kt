@@ -2,12 +2,10 @@ package com.redgunner.worddroid.view.fragment
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import android.os.Bundle
 import android.text.Html
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
+import android.webkit.WebChromeClient
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -31,8 +29,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private val viewModel: SharedViewModel by activityViewModels()
     private val navArgs: DetailFragmentArgs by navArgs()
-
-
 
 
     override fun onStart() {
@@ -59,13 +55,13 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     is PostState.Success -> {
                         shimmerState(isShimmer = false)
 
-                        showPost(post=postState.post)
+                        showPost(post = postState.post)
 
                     }
 
                     is PostState.Error -> {
                         detailShimmerLayout.isVisible = false
-                            Toast.makeText(
+                        Toast.makeText(
                             this@DetailFragment.context,
                             postState.message,
                             Toast.LENGTH_LONG
@@ -79,14 +75,10 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         }
 
 
-
-
-
     }
 
     override fun onResume() {
         super.onResume()
-
         topAppBar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
@@ -103,7 +95,8 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private fun showPost(post: Post) {
 
-        val htmlContent = "<html><body> ${post.content.rendered} </body></html>"
+        val htmlContent =
+            "<!DOCTYPE html> <html> <head> </head><meta name= viewport content= width=device-width  initial-scale=1.0 > <style>img{display: inline;height: auto;max-width: 100%;}</style> <body>   ${post.content.rendered} </body></html>"
 
         postWebView.loadDataWithBaseURL(
             null,
@@ -173,8 +166,64 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             this.settings.apply {
                 javaScriptEnabled = true
                 loadWithOverviewMode = true
+                useWideViewPort = true
+
             }
+            this.setInitialScale(1)
+
+            this.webChromeClient= object : WebChromeClient() {
+
+                private  var mCustomView: View? = null
+                private var mCustomViewCallback: CustomViewCallback? = null
+                private var mOriginalOrientation = 0
+                private var mOriginalSystemUiVisibility = 0
+
+                override fun onHideCustomView() {
+                    super.onHideCustomView()
+                    (activity!!.window.decorView as FrameLayout).removeView(mCustomView)
+
+                    this.mCustomView = null
+                    activity!!.window.decorView.setSystemUiVisibility(this.mOriginalSystemUiVisibility)
+                    activity!!.requestedOrientation = this.mOriginalOrientation
+                    this.mCustomViewCallback?.onCustomViewHidden()
+                    this.mCustomViewCallback=null
+
+                }
+
+
+                override fun onShowCustomView(view: View?, callback: CustomViewCallback?) {
+                    super.onShowCustomView(view, callback)
+
+
+                    if (this.mCustomView != null)
+                    {
+                        onHideCustomView()
+                        return
+                    }
+
+                    this.mCustomView = view
+                    this.mOriginalSystemUiVisibility = activity?.window?.decorView!!.getSystemUiVisibility()
+                    this.mOriginalOrientation = activity!!.requestedOrientation
+                    this.mCustomViewCallback =callback
+
+                    (activity!!.window.decorView as FrameLayout).addView(
+                        mCustomView,
+                        FrameLayout.LayoutParams(-1, -1)
+                    )
+                    activity!!.window.decorView
+                        .setSystemUiVisibility(3846 or View.SYSTEM_UI_FLAG_LAYOUT_STABLE)
+
+
+                }
+
+
+
+
+            }
+
         }
+
+
     }
 
 
