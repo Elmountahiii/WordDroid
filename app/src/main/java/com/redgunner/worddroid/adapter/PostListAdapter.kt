@@ -1,7 +1,10 @@
 package com.redgunner.worddroid.adapter
 
 import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.text.Html
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,9 +41,16 @@ class PostListAdapter (val postClick:(postId:Int)->Unit):
         fun bind(post: Post){
 
 
-            Glide.with(context)
-                .load(post._embedded.wp_FeaturedMedia[0].source_url)
-                .into(image)
+
+
+            if(!post._embedded.wp_FeaturedMedia.isNullOrEmpty()){
+
+                Glide.with(context)
+                    .load(post._embedded.wp_FeaturedMedia[0].source_url)
+                    .placeholder(ColorDrawable(Color.parseColor("#e2e2e2")))
+                    .into(image)
+
+            }
 
             title.text = Html.fromHtml(Html.fromHtml(post.title.rendered).toString())
 
@@ -49,6 +59,9 @@ class PostListAdapter (val postClick:(postId:Int)->Unit):
 
 
             time.text = SimpleDateFormat("yyyy-MM-dd").parse(post.date).toString()
+
+
+
 
         }
 

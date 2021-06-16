@@ -3,10 +3,14 @@ package com.redgunner.worddroid.view.fragment
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.text.Html
+import android.text.TextUtils.replace
+import android.util.Log
 import android.view.View
 import android.webkit.WebChromeClient
 import android.widget.FrameLayout
 import android.widget.Toast
+import androidx.core.text.htmlEncode
+import androidx.core.text.parseAsHtml
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -96,7 +100,8 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     private fun showPost(post: Post) {
 
         val htmlContent =
-            "<!DOCTYPE html> <html> <head> </head><meta name= viewport content= width=device-width  initial-scale=1.0 > <style>img{display: inline;height: auto;max-width: 100%;}</style> <body>   ${post.content.rendered} </body></html>"
+            "<!DOCTYPE html> <html> <head> </head><meta name= viewport content= width=device-width  initial-scale=1.0 > <style>img{display: inline;height: auto;max-width: 100%;} video{display: inline;width: 100%;poster=} p{height: auto;width: 100%; } iframe{width: 100%} </style> <body>   ${post.content.rendered.replace("\"","")} </body></html>"
+
 
         postWebView.loadDataWithBaseURL(
             null,
@@ -108,9 +113,13 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
 
 
-        Glide.with(this@DetailFragment)
-            .load(post._embedded.wp_FeaturedMedia[0].source_url)
-            .into(postImage)
+        if (!post._embedded.wp_FeaturedMedia.isNullOrEmpty()){
+            Glide.with(this@DetailFragment)
+                .load(post._embedded.wp_FeaturedMedia[0].source_url)
+                .into(postImage)
+        }
+
+
 
 
         postTitle.text = Html.fromHtml(Html.fromHtml(post.title.rendered).toString())
@@ -170,6 +179,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
             }
             this.setInitialScale(1)
+            
 
             this.webChromeClient= object : WebChromeClient() {
 
